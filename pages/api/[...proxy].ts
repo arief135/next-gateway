@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ProxyService, QueryString } from '@/src/services/proxy.service'
+import { ProxyService } from '@/src/services/proxy.service'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 

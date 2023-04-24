@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.1",
@@ -27,6 +28,9 @@
     "typescript": "5.0.3"
   },
   "devDependencies": {
-    "@types/i18n": "^0.13.6"
+    "@types/i18n": "^0.13.6",
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "node-mocks-http": "^1.12.2"
   }
 }

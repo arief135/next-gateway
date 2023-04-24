@@ -1,5 +1,6 @@
 import axios from "axios"
 import { NextApiRequest, NextApiResponse } from "next"
+import { i18n } from "../i18n"
 
 export type QueryString = { [key: string]: string }
 
@@ -42,7 +43,7 @@ export class ProxyService {
             this.sId = sId
             this.sysDetails = systemMap[this.sId]
         } else {
-            throw new Error(`System ID ${sId} not found`);
+            throw new Error(i18n.__('SYSTEM_ID_NOT_FOUND', sId))
         }
     }
 

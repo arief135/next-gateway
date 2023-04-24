@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { i18n } from '@/src/i18n'
 import { ProxyService } from '@/src/services/proxy.service'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import path from 'path'
 
 
 export default async function handler(
@@ -11,7 +13,7 @@ export default async function handler(
     const query = req.query.proxy as string[]
 
     if (query.length < 2) {
-        res.status(400).send('No system id specified')
+        res.status(400).send(i18n.__('NO_SYSTEM_ID_SPECIFIED')) 
         return
     }
 

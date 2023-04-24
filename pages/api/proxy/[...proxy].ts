@@ -12,12 +12,14 @@ export default async function handler(
 
     const query = req.query.proxy as string[]
 
-    if (query.length < 2) {
+    console.log(query)
+
+    if (query.length < 1) {
         res.status(400).send(i18n.__('NO_SYSTEM_ID_SPECIFIED')) 
         return
     }
 
-    const sId = query[1]
+    const sId = query[0]
 
     try {
         const proxyService = new ProxyService(sId)

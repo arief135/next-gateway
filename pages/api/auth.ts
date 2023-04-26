@@ -31,7 +31,7 @@ export default async function handler(
         return
     }
 
-    const secret = process.env.JWT_KEY as string
+    const secret = process.env.NEXTAUTH_SECRET as string
     const token: JWT = { name: userObj.user }
     const encoded = await encode({ secret, token })
 

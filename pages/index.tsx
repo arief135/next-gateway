@@ -1,33 +1,50 @@
-import { Card, Title, Text } from '@tremor/react';
-import { queryBuilder } from '../lib/planetscale';
-import Search from './search';
-import UsersTable from './table';
+import { useState } from "react";
+import { Card, Grid, Tab, TabList, Text, Title } from "@tremor/react";
 
-export const dynamic = 'force-dynamic';
+export default function KpiCardGrid() {
+    const [selectedView, setSelectedView] = useState("1");
+    return (
+        <main className="bg-slate-50 p-6 sm:p-10">
+            <Title>Dashboard</Title>
+            <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
-export default async function IndexPage({
-  searchParams
-}: {
-  searchParams: { q: string };
-}) {
-  const search = searchParams.q ?? '';
-  const users = await queryBuilder
-    .selectFrom('users')
-    .select(['id', 'name', 'username', 'email'])
-    .where('name', 'like', `%${search}%`)
-    .execute();
+            <TabList
+                defaultValue="1"
+                onValueChange={(value) => setSelectedView(value)}
+                className="mt-6"
+            >
+                <Tab value="1" text="Overview" />
+                <Tab value="2" text="Detail" />
+            </TabList>
 
-  return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <Title>Users</Title>
-      <Text>
-        A list of users retrieved from a MySQL database (PlanetScale).
-      </Text>
-      <Search />
-      <Card className="mt-6">
-        {/* @ts-expect-error Server Component */}
-        <UsersTable users={users} />
-      </Card>
-    </main>
-  );
+            {selectedView === "1" ? (
+                <>
+                    <Grid numColsLg={3} className="mt-6 gap-6">
+                        <Card>
+                            {/* Placeholder to set height */}
+                            <div className="h-28" />
+                        </Card>
+                        <Card>
+                            {/* Placeholder to set height */}
+                            <div className="h-28" />
+                        </Card>
+                        <Card>
+                            {/* Placeholder to set height */}
+                            <div className="h-28" />
+                        </Card>
+                    </Grid>
+
+                    <div className="mt-6">
+                        <Card>
+                            <div className="h-80" />
+                        </Card>
+                    </div>
+                </>
+            ) : (
+                <Card className="mt-6">
+                    <div className="h-96" />
+                </Card>
+            )}
+        </main>
+    );
 }

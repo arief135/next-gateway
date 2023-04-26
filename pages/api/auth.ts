@@ -1,13 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { JWT } from '@/src/services/jwt.service'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from "bcrypt";
 import { getUser } from '@/src/models/User';
-
-type UserPayload = {
-    user: string;
-    password: string;
-}
+import { encode, JWT } from 'next-auth/jwt';
 
 export default async function handler(
     req: NextApiRequest,
@@ -19,28 +14,29 @@ export default async function handler(
         return
     }
 
-    const userPayload = req.body as UserPayload
-
-    if (userPayload.user == undefined || userPayload.password == undefined) {
-        res.status(400).send('Invalid credentials')
-        return
-    }
+    const { user = '', password = '' } = req.body
 
     // validate user
-    const userObj = getUser(userPayload.user)
+    const userObj = getUser(user)
 
     if (userObj == undefined) {
         res.status(400).send('Invalid credentials')
         return
     }
 
-    const valid = await bcrypt.compare(userPayload.password, userObj.hash)
+    const valid = await bcrypt.compare(password, userObj.hash)
 
     if (!valid) {
         res.status(400).send('Invalid credentials')
         return
     }
 
-    const jwt = new JWT()
-    res.status(200).json(jwt.getToken(userPayload.user))
+    const secret = process.env.JWT_KEY as string
+    const token: JWT = { name: userObj.user }
+    const encoded = await encode({ secret, token })
+
+    const expire = new Date()
+    expire.setSeconds(30 * 24 * 60 * 60)
+
+    res.status(200).json({ token: encoded, expire })
 }

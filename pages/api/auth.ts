@@ -17,6 +17,11 @@ export default async function handler(
     const user = req.body.user as string
     const password = req.body.password as string
 
+    if (user == undefined || password == undefined) {
+        res.status(400).send('Invalid credentials')
+        return
+    }
+
     // validate user
     const userObj = getUser(user)
 

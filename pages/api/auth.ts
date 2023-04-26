@@ -4,6 +4,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from "bcrypt";
 import { getUser } from '@/src/models/User';
 
+type UserPayload = {
+    user: string;
+    password: string;
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -14,23 +19,22 @@ export default async function handler(
         return
     }
 
-    const user = req.body.user as string
-    const password = req.body.password as string
+    const userPayload = req.body as UserPayload
 
-    if (user == undefined || password == undefined) {
+    if (userPayload.user == undefined || userPayload.password == undefined) {
         res.status(400).send('Invalid credentials')
         return
     }
 
     // validate user
-    const userObj = getUser(user)
+    const userObj = getUser(userPayload.user)
 
     if (userObj == undefined) {
         res.status(400).send('Invalid credentials')
         return
     }
 
-    const valid = await bcrypt.compare(password, userObj.hash)
+    const valid = await bcrypt.compare(userPayload.password, userObj.hash)
 
     if (!valid) {
         res.status(400).send('Invalid credentials')
@@ -38,5 +42,5 @@ export default async function handler(
     }
 
     const jwt = new JWT()
-    res.status(200).json(jwt.getToken(user))
+    res.status(200).json(jwt.getToken(userPayload.user))
 }

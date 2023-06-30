@@ -8,9 +8,11 @@ module.exports = {
 
         // Path to the tremor module
         "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
+        './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
     ],
+    darkMode: 'class',
     theme: {
         extend: {},
     },
-    plugins: [],
+    plugins: [require("flowbite/plugin")],
 }

@@ -1,27 +1,15 @@
-export const metadata = {
-    title: 'Next-Gateway',
-    description: 'Monitor interfaces',
-}
+import { FC, PropsWithChildren } from "react";
+import FlowbiteContext from "./context/FlowbiteContext";
+import "./globals.css";
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
-    return (
-        <html lang="en">
-            <head>
-                <meta name="viewport" content="initial-scale=1, width=device-width" />
-                <link
-                    rel="stylesheet"
-                    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-                />
-                <link
-                    rel="stylesheet"
-                    href="https://fonts.googleapis.com/icon?family=Material+Icons"
-                />
-            </head>
-            <body>{children}</body>
-        </html>
-    )
-}
+const RootLayout: FC<PropsWithChildren> = function ({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <FlowbiteContext>{children}</FlowbiteContext>
+      </body>
+    </html>
+  );
+};
+
+export default RootLayout;

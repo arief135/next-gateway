@@ -54,22 +54,9 @@ const Header: FC<Record<string, never>> = function () {
             width="24"
           />
           <span className="self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">
-            Flowbite
+            NEXT Gateway
           </span>
         </Navbar.Brand>
-        <div className="flex md:order-2">
-          <Navbar.Toggle />
-          <DarkThemeToggle />
-        </div>
-        <Navbar.Collapse>
-          <Navbar.Link href="/" active>
-            Home
-          </Navbar.Link>
-          <Navbar.Link href="/">About</Navbar.Link>
-          <Navbar.Link href="/">Services</Navbar.Link>
-          <Navbar.Link href="/">Pricing</Navbar.Link>
-          <Navbar.Link href="/">Contact</Navbar.Link>
-        </Navbar.Collapse>
       </Navbar>
     </header>
   );

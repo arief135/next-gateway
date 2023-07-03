@@ -8,9 +8,9 @@ import {
     HiUser,
     HiViewBoards,
 } from "react-icons/hi";
-import Header from "./components/Header";
-import Sidebar from "./components/sidebar";
-import { SidebarProvider } from "./context/SidebarContext";
+import Header from "../components/Header";
+import Sidebar from "../components/sidebar";
+import { SidebarProvider } from "../context/SidebarContext";
 
 export default function Index(): JSX.Element {
     return (
@@ -39,7 +39,7 @@ function ActualSidebar(): JSX.Element {
                     <Sidebar.Item href="#" icon={HiViewBoards}>
                         Messages
                     </Sidebar.Item>
-                    <Sidebar.Item href="#proxy" icon={HiInbox}>
+                    <Sidebar.Item href="#" icon={HiInbox}>
                         Proxy
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>

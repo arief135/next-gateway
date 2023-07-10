@@ -27,6 +27,7 @@
     "flowbite-react": "^0.4.9",
     "i18n": "^0.15.1",
     "jsonwebtoken": "^9.0.0",
+    "kysely": "^0.26.1",
     "next": "^13.4.1",
     "next-auth": "^4.22.1",
     "postcss": "8.4.21",

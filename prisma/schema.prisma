@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Credential {
+  id             Int  @id @default(autoincrement())
+  credentialType Int?
+}
+
+model CredentialProperties {
+  id    Int
+  name  String  @db.VarChar(20)
+  value String? @db.VarChar(100)
+
+  @@id([id, name])
+}
+
+model CredentialType {
+  id   Int     @id
+  name String? @db.VarChar(40)
+}
+
+model Proxy {
+  uuid       String  @id @db.Uuid
+  name       String? @db.VarChar(20)
+  endpoint   String? @db.VarChar(40)
+  targetURL  String? @db.VarChar(200)
+  credential Int?
+  status     Int?
+}

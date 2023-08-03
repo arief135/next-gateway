@@ -8,8 +8,9 @@ datasource db {
 }
 
 model Credential {
-  id             Int  @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   credentialType Int?
+  Proxy          Proxy[]
 }
 
 model CredentialProperties {
@@ -26,10 +27,13 @@ model CredentialType {
 }
 
 model Proxy {
-  uuid       String  @id @db.Uuid
-  name       String? @db.VarChar(20)
-  endpoint   String? @db.VarChar(40)
-  targetURL  String? @db.VarChar(200)
-  credential Int?
-  status     Int?
+  uuid           String      @id @db.Uuid
+  name           String?     @db.VarChar(20)
+  endpoint       String?     @unique @db.VarChar(40)
+  targetURL      String?     @db.VarChar(200)
+  credential     Int?
+  status         Int?
+  lastModifiedOn DateTime?   @db.Timestamptz(6)
+  lastModifiedBy String?     @db.VarChar(20)
+  Credential     Credential? @relation(fields: [credential], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "credential_fk")
 }

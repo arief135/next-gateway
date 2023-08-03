@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Cla
 import { ProxiesService } from './proxies.service';
 import { CreateProxyDto } from './dto/create-proxy.dto';
 import { UpdateProxyDto } from './dto/update-proxy.dto';
-import { Proxy } from './entities/proxy.entity';
 
 @Controller('proxies')
 export class ProxiesController {
@@ -15,7 +14,7 @@ export class ProxiesController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll():Promise<Proxy[]> {
+  async findAll() {
     return this.proxiesService.findAll();
   }
 

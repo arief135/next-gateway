@@ -32,10 +32,11 @@ export class ProxiesService {
       }
     })
 
-    const results = proxy.map(e => {
-      const cred = creds.find(f => f.id = e.credential)
-      const props = credProps.filter(f => f.id == e.credential)
-      return new ProxyEntity(e, cred, props)
+    const results: ProxyEntity[] = proxy.map(e => {
+      const entity = e as ProxyEntity
+      entity.credentialInfo = creds.find(f => f.id = e.credential)
+      entity.credentialProperties = credProps.filter(f => f.id == e.credential)
+      return entity
     })
 
     return new APIResult(results)

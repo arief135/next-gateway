@@ -1,13 +1,6 @@
 import { CredentialProperties, Credential, Proxy } from '@prisma/client'
 
-export class ProxyEntity {
-
+export interface ProxyEntity extends Proxy {
+    credentialInfo: Credential,
     credentialProperties: CredentialProperties[]
-    credential: Credential
-
-    constructor(proxy: Proxy, credential: Credential, credentialProperties: CredentialProperties[]) {
-        Object.assign(this, proxy)
-        this.credential = credential
-        this.credentialProperties = credentialProperties
-    }
 }

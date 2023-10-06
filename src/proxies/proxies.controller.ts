@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { ProxiesService } from './proxies.service';
 import { CreateProxyDto } from './dto/create-proxy.dto';
 import { UpdateProxyDto } from './dto/update-proxy.dto';
@@ -12,8 +12,9 @@ export class ProxiesController {
     return this.proxiesService.create(createProxyDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
+  async findAll() {
     return this.proxiesService.findAll();
   }
 

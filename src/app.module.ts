@@ -9,7 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: 'client/webapp',
+      rootPath: 'c:\\Devs\\Temporary\\Javascript\\temp\\my-project\\dist',
       exclude: ['/api/(.*)'],
     }),
     ProxiesModule,

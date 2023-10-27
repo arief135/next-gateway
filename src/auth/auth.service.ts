@@ -13,6 +13,10 @@ export class AuthService {
     async signIn(username: string, pass: string): Promise<any> {
         const user = await this.usersService.findOne(username);
 
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+
         const isMatch = await bcrypt.compare(pass, user.passwordHash)
         if (!isMatch) {
             throw new UnauthorizedException();

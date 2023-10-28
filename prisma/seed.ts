@@ -37,6 +37,15 @@ async function main() {
         },
         update: {}
     })
+
+    const defaultRoles = ['ADMINISTRATOR', 'DEVELOPER', 'SERVICE']
+    defaultRoles.forEach(async (e) => {
+        await prisma.role.upsert({
+            create: { name: e },
+            update: {},
+            where: { name: e }
+        })
+    })
 }
 
 main()

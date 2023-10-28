@@ -39,11 +39,15 @@ model Proxy {
 }
 
 model User {
-  email        String   @id
-  username     String   @unique
-  firstName    String   @db.VarChar(40)
-  lastName     String   @db.VarChar(40)
+  email        String    @id
+  username     String    @unique
+  firstName    String    @db.VarChar(40)
+  lastName     String    @db.VarChar(40)
   passwordHash String
   active       Boolean
   lastLoggedIn DateTime?
+}
+
+model Role {
+  name String @id
 }

@@ -46,6 +46,28 @@ async function main() {
             where: { name: e }
         })
     })
+
+    await addSampleProxies()
+}
+
+async function addSampleProxies() {
+
+    const first = await prisma.proxy.findFirst({ where: { name: 'SAMPLE' } })
+
+    if (!first) {
+        await prisma.proxy.create({
+            data: {
+                name: 'SAMPLE',
+                status: 'ACTIVE',
+                endpoint: 'http://localhost:3000/api',
+                targetURL: 'http://localhost:3000/api',
+                lastModifiedBy: 'SYSTEM',
+                lastModifiedOn: new Date(),
+                credential: { create: { credentialType: 1 } }
+            }
+        })
+    }
+
 }
 
 main()

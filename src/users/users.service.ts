@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { APIResult } from 'src/base/base.interface';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class UsersService {
     }
 
     async findAll() {
-        return this.prisma.user.findMany({
+        const results = await this.prisma.user.findMany({
             select: {
                 email: true,
                 active: true,
@@ -22,6 +23,8 @@ export class UsersService {
                 username: true
             }
         })
+
+        return new APIResult(results)
     }
 
     async updateLastLoggedIn(pname: string) {

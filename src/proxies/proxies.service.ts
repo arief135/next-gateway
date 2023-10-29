@@ -20,22 +20,22 @@ export class ProxiesService {
     const creds = await this.prisma.credential.findMany({
       where: {
         id: {
-          in: proxy.map(e => e.credential)
+          in: proxy.map(e => e.credentialId)
         }
       }
     })
     const credProps = await this.prisma.credentialProperties.findMany({
       where: {
-        id: {
-          in: proxy.map(e => e.credential)
+        credentialId: {
+          in: proxy.map(e => e.credentialId)
         }
       }
     })
 
     const results: ProxyEntity[] = proxy.map(e => {
       const entity = e as ProxyEntity
-      entity.credentialInfo = creds.find(f => f.id = e.credential)
-      entity.credentialProperties = credProps.filter(f => f.id == e.credential)
+      entity.credentialInfo = creds.find(f => f.id = e.credentialId)
+      entity.credentialProperties = credProps.filter(f => f.credentialId == e.credentialId)
       return entity
     })
 

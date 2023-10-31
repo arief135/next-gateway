@@ -1,17 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProxyDto } from './dto/create-proxy.dto';
-import { UpdateProxyDto } from './dto/update-proxy.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ProxyEntity } from './entities/proxy.entity';
 import { APIResult } from 'src/base/base.interface';
+
 
 @Injectable()
 export class ProxiesService {
 
   constructor(private prisma: PrismaService) { }
 
-  create(createProxyDto: CreateProxyDto) {
-    return 'This action adds a new proxy';
+  create(createProxy: ProxyEntity) {
+    return this.prisma.proxy.create({
+      data: {
+        name: createProxy.name,
+        endpoint: createProxy.endpoint,
+        targetURL: createProxy.targetURL,
+        status: createProxy.status,
+        credential: {
+          create: {
+            credentialType: createProxy.credentialInfo.credentialType,
+            CredentialProperties: {
+              createMany: {
+                data: createProxy.credentialProperties
+              }
+            }
+          }
+        },
+        lastModifiedOn: new Date()
+      }
+    })
   }
 
   async findAll() {
@@ -46,7 +63,7 @@ export class ProxiesService {
     return `This action returns a #${id} proxy`;
   }
 
-  update(id: number, updateProxyDto: UpdateProxyDto) {
+  update(id: number, updateProxy: ProxyEntity) {
     return `This action updates a #${id} proxy`;
   }
 

@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, 
+  Get, Post, Body, Patch, Param, Delete, Request,  UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { ProxiesService } from './proxies.service';
-import { CreateProxyDto } from './dto/create-proxy.dto';
-import { UpdateProxyDto } from './dto/update-proxy.dto';
+import { ProxyEntity } from './entities/proxy.entity';
+
 
 @Controller('proxies')
 export class ProxiesController {
   constructor(private readonly proxiesService: ProxiesService) {}
 
   @Post()
-  create(@Body() createProxyDto: CreateProxyDto) {
-    return this.proxiesService.create(createProxyDto);
+  create(@Body() createProxy: ProxyEntity, @Request() req) {
+    console.log(req.user)
+    return this.proxiesService.create(createProxy);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -24,8 +26,8 @@ export class ProxiesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProxyDto: UpdateProxyDto) {
-    return this.proxiesService.update(+id, updateProxyDto);
+  update(@Param('id') id: string, @Body() updateProxy: ProxyEntity) {
+    return this.proxiesService.update(+id, updateProxy);
   }
 
   @Delete(':id')

@@ -64,6 +64,10 @@ export class ProxiesService {
     return `This action returns a #${id} proxy`;
   }
 
+  async findByName(dest: string) {
+    return this.prisma.proxy.findFirstOrThrow({ where: { name: dest } });
+  }
+
   update(id: number, updateProxy: ProxyEntity) {
     return `This action updates a #${id} proxy`;
   }
@@ -71,4 +75,6 @@ export class ProxiesService {
   remove(id: number) {
     return `This action removes a #${id} proxy`;
   }
+
+
 }

@@ -26,7 +26,8 @@ export class ProxiesService {
             }
           }
         },
-        lastModifiedOn: new Date()
+        lastModifiedOn: new Date(),
+        lastModifiedBy: createProxy.lastModifiedBy
       }
     })
   }

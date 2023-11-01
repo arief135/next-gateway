@@ -10,7 +10,7 @@ export class ProxiesController {
 
   @Post()
   create(@Body() createProxy: ProxyEntity, @Request() req) {
-    console.log(req.user)
+    createProxy.lastModifiedBy = req.user.username
     return this.proxiesService.create(createProxy);
   }
 

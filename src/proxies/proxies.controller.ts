@@ -1,5 +1,5 @@
 import { Controller, 
-  Get, Post, Body, Patch, Param, Delete, Request,  UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+  Get, Post, Body, Patch, Param, Delete, Request,  UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
 import { ProxiesService } from './proxies.service';
 import { ProxyEntity } from './entities/proxy.entity';
 
@@ -25,9 +25,12 @@ export class ProxiesController {
     return this.proxiesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProxy: ProxyEntity) {
-    return this.proxiesService.update(+id, updateProxy);
+  @Patch(':uuid')
+  update(@Param('uuid') uuid: string, @Body() updateProxy: ProxyEntity, @Req() req) {
+    updateProxy.lastModifiedBy = req.user.username
+    updateProxy.lastModifiedOn = new Date()
+
+    return this.proxiesService.update(uuid, updateProxy);
   }
 
   @Delete(':id')

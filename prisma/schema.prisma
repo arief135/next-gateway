@@ -10,9 +10,9 @@ datasource db {
 /////////////////////////////////////////////////////////////
 
 model Proxy {
-  uuid           String     @id @db.Uuid @default(uuid())
+  uuid           String     @id @default(uuid()) @db.Uuid
   name           String     @db.VarChar(20)
-  endpoint       String     @unique @db.VarChar(40)
+  alias          String     @unique @db.VarChar(40)
   targetURL      String     @db.VarChar(200)
   status         String     @db.VarChar(10)
   credential     Credential @relation(fields: [credentialId], references: [id])

@@ -59,7 +59,7 @@ async function addSampleProxies() {
             data: {
                 name: 'SAMPLE',
                 status: 'ACTIVE',
-                endpoint: 'http://localhost:3000/api',
+                alias: 'sample',
                 targetURL: 'http://localhost:3000/api',
                 lastModifiedBy: 'SYSTEM',
                 lastModifiedOn: new Date(),

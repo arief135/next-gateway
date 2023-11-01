@@ -13,7 +13,7 @@ export class ProxiesService {
     return this.prisma.proxy.create({
       data: {
         name: createProxy.name,
-        endpoint: createProxy.endpoint,
+        alias: createProxy.alias,
         targetURL: createProxy.targetURL,
         status: createProxy.status,
         credential: {
@@ -68,8 +68,15 @@ export class ProxiesService {
     return this.prisma.proxy.findFirstOrThrow({ where: { name: dest } });
   }
 
-  update(id: number, updateProxy: ProxyEntity) {
-    return `This action updates a #${id} proxy`;
+  update(uuid: string, updateProxy: ProxyEntity) {
+    console.log(updateProxy)
+
+    return this.prisma.proxy.update({
+      where: {
+        uuid
+      },
+      data: updateProxy
+    })
   }
 
   remove(id: number) {

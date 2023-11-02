@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Request, Response } from 'express'
+import { Agent } from 'node:https';
 import { ProxiesService } from 'src/proxies/proxies.service';
 
 @Injectable()
 export class RunnerService {
-
     constructor(private proxiesService: ProxiesService) { }
 
     async run(dest: string, req: Request, res: Response) {
@@ -32,5 +32,26 @@ export class RunnerService {
         }
 
         return await axios.request(requestProp)
+    }
+
+    async testConnection(targetURL: string, username: string, password: string, ignoreCert = false) {
+        
+        let agent = undefined
+        if (ignoreCert) {
+            agent = new Agent({
+                rejectUnauthorized: false,
+                requestCert: false
+            })
+        }
+
+        return await axios.request({
+            method: 'GET',
+            url: targetURL,
+            auth: {
+                username,
+                password
+            },
+            httpsAgent: agent
+        })
     }
 }

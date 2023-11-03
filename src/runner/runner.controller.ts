@@ -24,12 +24,9 @@ export class RunnerController {
             req.body.password,
             req.body.ignoreCert)
 
-        for (const key in result.headers) {
-            if (Object.prototype.hasOwnProperty.call(result.headers, key)) {
-                const e = result.headers[key];
-                res.setHeader(key, e)
-            }
-        }
+        console.log(result.headers)
+        res.setHeader('Content-Type', result.headers['content-type'])
+
         res.statusMessage = 'Connected'
         res.statusCode = 200
         res.send(result.data)

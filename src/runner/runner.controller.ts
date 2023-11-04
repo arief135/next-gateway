@@ -9,6 +9,9 @@ import {
 import { RunnerService } from './runner.service'
 import { Public } from 'src/auth/auth.guard'
 import { Request, Response } from 'express'
+import axios from 'axios'
+import { Agent } from 'node:https'
+import fetch from 'node-fetch'
 
 @Controller('run')
 @Public()
@@ -24,7 +27,6 @@ export class RunnerController {
             req.body.password,
             req.body.ignoreCert)
 
-        console.log(result.headers)
         res.setHeader('Content-Type', result.headers['content-type'])
 
         res.statusMessage = 'Connected'
@@ -33,8 +35,24 @@ export class RunnerController {
     }
 
     @All(':dest*')
-    run(@Req() req: Request, @Res() res: Response, @Param() params) {
-        return this.runnerService.run(params.dest, req, res)
+    async run(@Req() req: Request, @Res() res: Response, @Param() params) {
+        const result = await this.runnerService.run(params.dest, req, res)
+
+        const headers = result.headers.raw()
+
+        delete headers['content-encoding']
+
+        for (const key in headers) {
+            const value = headers[key];
+            res.setHeader(key, value)
+        }
+
+        const text = await result.text()
+
+        res.statusCode = result.status
+        res.statusMessage = result.statusText
+        
+        res.send(text)
     }
 
 }

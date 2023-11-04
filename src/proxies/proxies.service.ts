@@ -64,13 +64,11 @@ export class ProxiesService {
     return `This action returns a #${id} proxy`;
   }
 
-  async findByName(dest: string) {
+  findByName(dest: string) {
     return this.prisma.proxy.findFirstOrThrow({ where: { name: dest } });
   }
 
   update(uuid: string, updateProxy: ProxyEntity) {
-    console.log(updateProxy)
-
     return this.prisma.proxy.update({
       where: {
         uuid

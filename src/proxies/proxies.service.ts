@@ -1,17 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProxyDto } from './dto/create-proxy.dto';
-import { UpdateProxyDto } from './dto/update-proxy.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ProxyEntity } from './entities/proxy.entity';
 import { APIResult } from 'src/base/base.interface';
+
 
 @Injectable()
 export class ProxiesService {
 
   constructor(private prisma: PrismaService) { }
 
-  create(createProxyDto: CreateProxyDto) {
-    return 'This action adds a new proxy';
+  create(createProxy: ProxyEntity) {
+    return this.prisma.proxy.create({
+      data: {
+        name: createProxy.name,
+        alias: createProxy.alias,
+        targetURL: createProxy.targetURL,
+        status: createProxy.status,
+        credential: {
+          create: {
+            credentialType: createProxy.credentialInfo.credentialType,
+            CredentialProperties: {
+              createMany: {
+                data: createProxy.credentialProperties
+              }
+            }
+          }
+        },
+        lastModifiedOn: new Date(),
+        lastModifiedBy: createProxy.lastModifiedBy
+      }
+    })
   }
 
   async findAll() {
@@ -20,22 +38,22 @@ export class ProxiesService {
     const creds = await this.prisma.credential.findMany({
       where: {
         id: {
-          in: proxy.map(e => e.credential)
+          in: proxy.map(e => e.credentialId)
         }
       }
     })
     const credProps = await this.prisma.credentialProperties.findMany({
       where: {
-        id: {
-          in: proxy.map(e => e.credential)
+        credentialId: {
+          in: proxy.map(e => e.credentialId)
         }
       }
     })
 
     const results: ProxyEntity[] = proxy.map(e => {
       const entity = e as ProxyEntity
-      entity.credentialInfo = creds.find(f => f.id = e.credential)
-      entity.credentialProperties = credProps.filter(f => f.id == e.credential)
+      entity.credentialInfo = creds.find(f => f.id = e.credentialId)
+      entity.credentialProperties = credProps.filter(f => f.credentialId == e.credentialId)
       return entity
     })
 
@@ -46,11 +64,22 @@ export class ProxiesService {
     return `This action returns a #${id} proxy`;
   }
 
-  update(id: number, updateProxyDto: UpdateProxyDto) {
-    return `This action updates a #${id} proxy`;
+  findByName(dest: string) {
+    return this.prisma.proxy.findFirstOrThrow({ where: { name: dest } });
+  }
+
+  update(uuid: string, updateProxy: ProxyEntity) {
+    return this.prisma.proxy.update({
+      where: {
+        uuid
+      },
+      data: updateProxy
+    })
   }
 
   remove(id: number) {
     return `This action removes a #${id} proxy`;
   }
+
+
 }

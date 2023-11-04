@@ -7,18 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/////////////////////////////////////////////////////////////
+
+model Proxy {
+  uuid           String     @id @default(uuid()) @db.Uuid
+  name           String     @db.VarChar(20)
+  alias          String     @unique @db.VarChar(40)
+  targetURL      String     @db.VarChar(200)
+  status         String     @db.VarChar(10)
+  credential     Credential @relation(fields: [credentialId], references: [id])
+  credentialId   Int
+  lastModifiedOn DateTime?  @db.Timestamptz(6)
+  lastModifiedBy String?    @db.VarChar(20)
+}
+
 model Credential {
-  id             Int     @id @default(autoincrement())
-  credentialType Int?
-  Proxy          Proxy[]
+  id                   Int                    @id @default(autoincrement())
+  credentialType       Int?
+  CredentialProperties CredentialProperties[]
+  Proxy                Proxy[]
 }
 
 model CredentialProperties {
-  id    Int
-  name  String  @db.VarChar(20)
-  value String? @db.VarChar(100)
+  credential   Credential @relation(fields: [credentialId], references: [id])
+  credentialId Int
+  name         String     @db.VarChar(20)
+  value        String?    @db.VarChar(100)
 
-  @@id([id, name])
+  @@id([credentialId, name])
 }
 
 model CredentialType {
@@ -26,14 +42,27 @@ model CredentialType {
   name String? @db.VarChar(40)
 }
 
-model Proxy {
-  uuid           String      @id @db.Uuid
-  name           String?     @db.VarChar(20)
-  endpoint       String?     @unique @db.VarChar(40)
-  targetURL      String?     @db.VarChar(200)
-  credential     Int?
-  status         Int?
-  lastModifiedOn DateTime?   @db.Timestamptz(6)
-  lastModifiedBy String?     @db.VarChar(20)
-  Credential     Credential? @relation(fields: [credential], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "credential_fk")
+model User {
+  username     String     @id
+  email        String
+  firstName    String     @db.VarChar(40)
+  lastName     String     @db.VarChar(40)
+  passwordHash String
+  active       Boolean
+  lastLoggedIn DateTime?
+  UserRole     UserRole[]
+}
+
+model Role {
+  name     String     @id
+  UserRole UserRole[]
+}
+
+model UserRole {
+  user     User   @relation(fields: [userName], references: [username])
+  role     Role   @relation(fields: [roleName], references: [name])
+  userName String
+  roleName String
+
+  @@id([userName, roleName])
 }

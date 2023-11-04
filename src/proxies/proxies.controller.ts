@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, 
+  Get, Post, Body, Patch, Param, Delete, Request,  UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
 import { ProxiesService } from './proxies.service';
-import { CreateProxyDto } from './dto/create-proxy.dto';
-import { UpdateProxyDto } from './dto/update-proxy.dto';
+import { ProxyEntity } from './entities/proxy.entity';
+
 
 @Controller('proxies')
 export class ProxiesController {
   constructor(private readonly proxiesService: ProxiesService) {}
 
   @Post()
-  create(@Body() createProxyDto: CreateProxyDto) {
-    return this.proxiesService.create(createProxyDto);
+  create(@Body() createProxy: ProxyEntity, @Request() req) {
+    createProxy.lastModifiedBy = req.user.username
+    return this.proxiesService.create(createProxy);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -23,9 +25,12 @@ export class ProxiesController {
     return this.proxiesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProxyDto: UpdateProxyDto) {
-    return this.proxiesService.update(+id, updateProxyDto);
+  @Patch(':uuid')
+  update(@Param('uuid') uuid: string, @Body() updateProxy: ProxyEntity, @Req() req) {
+    updateProxy.lastModifiedBy = req.user.username
+    updateProxy.lastModifiedOn = new Date()
+
+    return this.proxiesService.update(uuid, updateProxy);
   }
 
   @Delete(':id')

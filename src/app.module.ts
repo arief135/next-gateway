@@ -4,9 +4,19 @@ import { AppService } from './app.service';
 import { ProxiesModule } from './proxies/proxies.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { RunnerModule } from './runner/runner.module';
 
 @Module({
-  imports: [ProxiesModule, AuthModule, UsersModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: 'c:\\Devs\\Temporary\\Javascript\\temp\\my-project\\dist',
+      exclude: ['/api/(.*)'],
+    }),
+    ProxiesModule,
+    AuthModule,
+    UsersModule,
+    RunnerModule],
   controllers: [AppController],
   providers: [AppService],
 })

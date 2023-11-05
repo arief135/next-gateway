@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { Request, Response } from 'express'
 import { Agent } from 'node:https';
 import { ProxiesService } from 'src/proxies/proxies.service';
-import fetch from 'node-fetch'
+import fetch, { RequestInit } from 'node-fetch'
 
 @Injectable()
 export class RunnerService {
@@ -20,48 +20,19 @@ export class RunnerService {
 
         // construct url
         const url = new URL(proxy.targetURL)
+
+        if (url.pathname.endsWith('/')) {
+            url.pathname = url.pathname.substring(0, url.pathname.length - 1)
+        }
+
         url.pathname += req.params[0]
+
         for (const key in req.query) {
             if (Object.prototype.hasOwnProperty.call(req.query, key)) {
                 const element = req.query[key] as string;
                 url.searchParams.set(key, element)
             }
         }
-
-        // const headers = { ...req.headers }
-        // delete headers.host
-        // delete headers.authorization
-        // delete headers.connection
-
-        // const requestProp: AxiosRequestConfig = {
-        //     url: url.href,
-        //     headers: headers,
-        //     method: req.method,
-        //     httpsAgent: new Agent({
-        //         rejectUnauthorized: false,
-        //         requestCert: false
-        //     }),
-        //     auth: {
-        //         username,
-        //         password
-        //     },
-        // }
-
-        // const result = await this.httpService.axiosRef.request(requestProp)
-        // console.log(requestProp.headers)
-        // const result = this.httpService.get(
-        //     'https://vhptrds4ci.sap.adhi.co.id:44300/sap/opu/odata/sap/API_BUSINESS_PARTNER',
-        //     {
-        //         auth: {
-        //             username,
-        //             password
-        //         },
-        //         httpsAgent: new Agent({
-        //             rejectUnauthorized: false,
-        //             requestCert: false
-        //         }),
-        //     })
-
 
         const headers = {}
 
@@ -72,15 +43,26 @@ export class RunnerService {
 
         headers['authorization'] = 'Basic ' + btoa(`${username}:${password}`)
 
-        return await fetch(
-            url.href,
-            {
-                headers: headers,
-                agent: new Agent({
-                    rejectUnauthorized: false,
-                    requestCert: false
-                })
+        delete headers['host']
+
+        const requestInit: RequestInit = {
+            method: req.method,
+            headers: headers,
+            agent: new Agent({
+                rejectUnauthorized: false,
+                requestCert: false
             })
+        }
+
+        if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+            requestInit.body = JSON.stringify(req.body)
+        }
+
+        // console.log(url.href)
+        // console.log(req.body)
+        // console.log(requestInit)
+
+        return await fetch(url.href, requestInit)
     }
 
     async testConnection(targetURL: string, username: string, password: string, ignoreCert = false) {

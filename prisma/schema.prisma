@@ -66,3 +66,16 @@ model UserRole {
 
   @@id([userName, roleName])
 }
+
+model Trace {
+  uuid        String   @id @default(uuid()) @db.Uuid
+  sequence    String   @db.Uuid
+  proxy       String   @db.Uuid
+  stepNo      Int
+  stepName    String
+  header      String
+  payload     String
+  contentType String
+  eventDate   DateTime
+  byUser      String
+}
